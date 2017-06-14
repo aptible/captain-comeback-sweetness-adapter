@@ -14,7 +14,7 @@ REDIS_URL = os.environ["REDIS_URL"]
 SIDEKIQ_QUEUE = os.environ["SIDEKIQ_QUEUE"]
 
 POOL = redis.BlockingConnectionPool.from_url(
-    REDIS_URL, max_connections=1
+    REDIS_URL, decode_components=True, max_connections=1,
 )
 
 

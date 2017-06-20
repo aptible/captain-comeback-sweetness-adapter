@@ -1,0 +1,12 @@
+sudo: false
+dist: trusty
+language: python
+services:
+- redis-server
+python:
+  - "2.7"
+  - "3.4"
+  - "3.5"
+script:
+  - pip install -r test_requirements.txt
+  - make test

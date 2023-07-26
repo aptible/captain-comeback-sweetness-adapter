@@ -7,30 +7,13 @@ REL_HERE=$(dirname "${BASH_SOURCE}")
 HERE=$(cd "${REL_HERE}"; pwd)
 cd "$HERE"
 
-REDIS_TEST_PORT=8888
+sleep 5 # Give redis and influx a moment to start
 
-echo "=== Start Redis ==="
-redis-server \
-  --daemonize yes \
-  --save "" \
-  --appendonly no \
-  --requirepass "FOO BAR" \
-  --bind 127.0.0.1 \
-  --port "$REDIS_TEST_PORT"
-
-terminate_redis () {
-  echo "=== Shutdown Redis ==="
-  redis-cli -a "FOO BAR" -p "$REDIS_TEST_PORT" SHUTDOWN
-}
-
-trap terminate_redis EXIT
-
-export REDIS_URL="redis://:FOO%20BAR@localhost:${REDIS_TEST_PORT}"
-export SIDEKIQ_QUEUE="foo-queue"
-
-redis-cli -a "FOO BAR" -p "$REDIS_TEST_PORT" FLUSHDB
+redis-cli -h redis FLUSHDB
+python "${HERE}/influx.py" "clear"
 
 echo "=== Check push ==="
+python "${HERE}/push.py"
 python "${HERE}/push.py"
 
 echo "=== Check task ==="
@@ -39,8 +22,19 @@ bundle install
 bundle exec sidekiq -q "$SIDEKIQ_QUEUE" -r ./app.rb
 popd
 
+echo "=== Check metrics ==="
+python "${HERE}/influx.py" "check" "foo-container" 2
+
+echo "=== Check metrics don't block ==="
+export INFLUXDB_HOST=fake
+pushd app
+if [[ "$(python "${HERE}/push.py" -r ./app.rb 2>&1 | grep -ic "enqueued restart")" != 1 ]]; then
+  exit 1
+fi
+popd
+
 echo "=== Check retry ==="
-export REDIS_URL="redis://localhost:6380"
+export REDIS_URL="redis://fake:6380"
 if [[ "$(python "${HERE}/push.py" 2>&1 | grep -ic "retry redis error")" != 1 ]]; then
   exit 1
 fi

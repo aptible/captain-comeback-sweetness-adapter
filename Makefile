@@ -7,8 +7,8 @@ dist: clean
 	python setup.py bdist_wheel
 	ls -l dist
 
-install: clean
-	python setup.py install
+install:
+	docker compose build
 
 clean: clean-tox clean-build clean-pyc
 
@@ -27,10 +27,10 @@ clean-tox:
 
 
 unit:
-	# python setup.py nosetests
+	# docker compose run adapter nose2 -v
 
 integration: install
-	integration/test.sh
+	docker compose run adapter integration/test.sh
 
 test: unit integration
 

@@ -40,6 +40,7 @@ setup(
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.11',
     ],
     test_suite='captain_comeback_sweetness_adapter.test',
     tests_require=test_requirements

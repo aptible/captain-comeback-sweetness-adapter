@@ -1,0 +1,21 @@
+FROM ruby:2.6
+RUN apt-get update && apt-get install  --no-install-recommends -y redis \
+    python2 \
+    wget gcc make openssl libffi-dev libgdbm-dev libsqlite3-dev libssl-dev zlib1g-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py 
+RUN python2 get-pip.py 
+WORKDIR /app
+
+WORKDIR /app/integration/app
+COPY integration/app .
+RUN bundle install
+
+WORKDIR /app
+COPY . /app
+
+RUN pip2 install --upgrade pip setuptools wheel
+
+RUN ln -s /usr/bin/python2 /usr/bin/python
+RUN python2 setup.py install 

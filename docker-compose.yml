@@ -1,0 +1,36 @@
+version: "3.9"
+services:
+  adapter:
+    build:
+      context: .
+      dockerfile: ${DOCKERFILE}
+      args:
+        - PYTHON_VERSION=${python_version:-3.11}
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - INFLUXDB_HOST=influxdb
+      - INFLUXDB_PORT=8086
+      - INFLUXDB_DATABASE=cc
+      - INFLUXDB_USER=aptible
+      - INFLUXDB_PASSWORD=aptible
+      - INFLUXDB_SSL=false
+      - SIDEKIQ_QUEUE=i-foobar
+    volumes:
+      - type: bind
+        source: .
+        target: /app
+    depends_on:
+      - redis
+      - influxdb
+  redis:
+    image: redis:4.0
+    ports:
+      - "6379:6379"
+  influxdb:
+    image: influxdb:1.8
+    ports:
+      - "8086:8086"
+    environment:
+      - INFLUXDB_DB=cc
+      - INFLUXDB_ADMIN_USER=aptible
+      - INFLUXDB_ADMIN_PASSWORD=aptible

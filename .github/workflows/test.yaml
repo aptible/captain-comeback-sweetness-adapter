@@ -1,0 +1,31 @@
+name: deploy
+
+on: [push]
+
+jobs:
+  test_python2:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: docker compose build
+        env:
+          DOCKERFILE: Dockerfile.python2
+
+      - name: Test
+        run: docker compose run adapter integration/test.sh
+
+  test_python3:
+    strategy:
+      matrix:
+        python_version: [3.5, 3.8, 3.11]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - run: docker compose build
+        env:
+          python_version: ${{ matrix.python_version }}
+          DOCKERFILE: Dockerfile
+
+      - name: Test
+        run: docker compose run adapter integration/test.sh

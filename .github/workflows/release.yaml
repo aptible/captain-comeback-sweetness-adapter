@@ -21,6 +21,7 @@ jobs:
       - name: Publish wheel (PR)
         if: github.event_name == 'pull_request'
         run:  |
+          pip install bump2version
           gem install package_cloud
           make packagecloud-branch
         env:

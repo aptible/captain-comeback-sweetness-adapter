@@ -1,12 +1,3 @@
-release: clean
-	python setup.py sdist upload
-	python setup.py bdist_wheel upload
-
-dist: clean
-	python setup.py sdist
-	python setup.py bdist_wheel
-	ls -l dist
-
 packagecloud: clean
 	python setup.py bdist_wheel
 	package_cloud push aptible/captain-comeback/python dist/captain_comeback_sweetness_adapter-*

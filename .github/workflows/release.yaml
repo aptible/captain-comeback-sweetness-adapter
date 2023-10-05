@@ -1,0 +1,31 @@
+name: release
+
+on:
+  release:
+    types:
+      - created
+  pull_request:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    needs: [test_python2, test_python3]
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Publish wheel (PR)
+        if: github.event_name == 'pull_request'
+        run:  |
+          gem install package_cloud
+          make packagecloud-branch
+        env:
+          PACKAGECLOUD_TOKEN: ${{ secrets.PACKAGECLOUD_TOKEN }}
+      
+      - name: Publish wheel (Release)
+        if: github.event_name != 'pull_request'
+        run:  |
+          gem install package_cloud
+          make packagecloud
+        env:
+          PACKAGECLOUD_TOKEN: ${{ secrets.PACKAGECLOUD_TOKEN }}

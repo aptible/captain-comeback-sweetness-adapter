@@ -9,7 +9,6 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
-    needs: [test_python2, test_python3]
     steps:
       - name: Check out code
         uses: actions/checkout@v2

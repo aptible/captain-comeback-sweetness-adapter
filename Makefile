@@ -27,7 +27,6 @@ clean-pyc:
 clean-tox:
 	rm -rf .tox/
 
-
 unit:
 	# docker compose run adapter nose2 -v
 
@@ -36,4 +35,4 @@ integration: install
 
 test: unit integration
 
-.PHONY: release dist install clean-tox clean-pyc clean-build test unit integration packagecloud
+.PHONY: release dist install clean-tox clean-pyc clean-build test unit integration packagecloud packagecloud-branch

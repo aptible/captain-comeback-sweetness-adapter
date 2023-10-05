@@ -1,6 +1,6 @@
-name: deploy
+name: test
 
-on: [push]
+-on: [push]
 
 jobs:
   test_python2:

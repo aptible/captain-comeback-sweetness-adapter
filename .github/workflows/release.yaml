@@ -10,6 +10,9 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
+      - name: Install Ruby
+        uses: ruby/setup-ruby@v1
+
       - name: Check out code
         uses: actions/checkout@v2
 

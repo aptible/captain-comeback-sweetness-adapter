@@ -78,5 +78,5 @@ def restart(cg, retried=False):
 
 __author__ = "Thomas Orozco"
 __email__ = "thomas@aptible.com"
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 __all__ = ['restart']

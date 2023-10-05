@@ -7,6 +7,10 @@ dist: clean
 	python setup.py bdist_wheel
 	ls -l dist
 
+packagecloud: clean
+	python setup.py bdist_wheel
+	package_cloud push aptible/captain-comeback/python dist/captain_comeback_sweetness_adapter-*
+
 install:
 	docker compose build
 

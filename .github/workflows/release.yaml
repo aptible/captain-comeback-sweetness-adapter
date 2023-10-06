@@ -1,0 +1,38 @@
+name: release
+
+on:
+  release:
+    types:
+      - created
+  pull_request:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2
+
+      - name: Check out code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref || github.ref }}
+
+      - name: Publish wheel (PR)
+        if: github.event_name == 'pull_request'
+        run:  |
+          pip install bump2version
+          gem install package_cloud
+          make packagecloud-branch
+        env:
+          PACKAGECLOUD_TOKEN: ${{ secrets.PACKAGECLOUD_TOKEN }}
+      
+      - name: Publish wheel (Release)
+        if: github.event_name != 'pull_request'
+        run:  |
+          gem install package_cloud
+          make packagecloud
+        env:
+          PACKAGECLOUD_TOKEN: ${{ secrets.PACKAGECLOUD_TOKEN }}

@@ -16,7 +16,7 @@ with open(os.path.join(HERE, 'test_requirements.txt')) as f:
 
 setup(
     name='captain_comeback_sweetness_adapter',
-    version='0.1.0',
+    version='0.2.0',
     description="Captain Comeback Restart Adapter that pushes a RecoverContainer Task to Sweetness",
     long_description=readme,
     author="Thomas Orozco",

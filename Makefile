@@ -1,11 +1,13 @@
-release: clean
-	python setup.py sdist upload
-	python setup.py bdist_wheel upload
-
-dist: clean
-	python setup.py sdist
+packagecloud: clean
 	python setup.py bdist_wheel
-	ls -l dist
+	package_cloud push aptible/captain-comeback/python dist/captain_comeback_sweetness_adapter-*
+
+COMMIT_ID := $(shell git rev-parse --short HEAD)
+packagecloud-branch: clean
+	bumpversion major --new-version 0.0.0-$(COMMIT_ID) --no-commit --no-tag
+	python setup.py bdist_wheel
+	git stash push -m auto_stash_$(COMMIT_ID)
+	package_cloud push aptible/captain-comeback/python dist/captain_comeback_sweetness_adapter-*
 
 install:
 	docker compose build
@@ -25,7 +27,6 @@ clean-pyc:
 clean-tox:
 	rm -rf .tox/
 
-
 unit:
 	# docker compose run adapter nose2 -v
 
@@ -34,4 +35,4 @@ integration: install
 
 test: unit integration
 
-.PHONY: release dist install clean-tox clean-pyc clean-build test unit integration
+.PHONY: release dist install clean-tox clean-pyc clean-build test unit integration packagecloud packagecloud-branch

@@ -1,4 +1,4 @@
-FROM ruby:2.6
+FROM ruby:2.7.6
 RUN apt-get update && apt-get install  --no-install-recommends -y redis \
     python3 python3-pip make build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget ca-certificates curl llvm libncurses5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev mecab-ipadic-utf8 git \
     && rm -rf /var/lib/apt/lists/*
